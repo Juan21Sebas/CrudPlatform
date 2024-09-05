@@ -64,20 +64,16 @@ func NewSQLiteDB() (*sql.DB, error) {
 		return nil, err
 	}
 
-	// Creacion tabla companies
-	_, err = db.Exec(`CREATE TABLE IF NOT EXISTS companies (
-		id INTEGER PRIMARY KEY AUTOINCREMENT,
-		name TEXT,
-		image_path TEXT,
-		location TEXT,
-		industry TEXT,
-		user_id INTEGER,
-		created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-		updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-		FOREIGN KEY (user_id) REFERENCES users(id)
+	// Creacion tabla videos
+	_, err = db.Exec(`CREATE TABLE IF NOT EXISTS videos (
+		id TEXT PRIMARY KEY,
+		title TEXT,
+		description TEXT,
+		created_at TEXT,
+		updated_at TEXT
 	)`)
 	if err != nil {
-		fmt.Println("Error al crear la tabla companies:", err)
+		fmt.Println("Error al crear la tabla videos:", err)
 		db.Close()
 		return nil, err
 	}

@@ -10,19 +10,30 @@ type BDRepository struct {
 	mu sync.Mutex
 }
 
+type BDRepositoryChallenge struct {
+	db *sql.DB
+	mu sync.Mutex
+}
+
+type BDRepositoryVideo struct {
+	db *sql.DB
+	mu sync.Mutex
+}
+
 func NewBdRepository(db *sql.DB) *BDRepository {
 	return &BDRepository{
 		db: db,
 	}
 }
 
-type BDRepositoryChallenge struct {
-	db *sql.DB
-	mu sync.Mutex
-}
-
 func NewBdRepositoryChallenge(db *sql.DB) *BDRepositoryChallenge {
 	return &BDRepositoryChallenge{
+		db: db,
+	}
+}
+
+func NewBdRepositoryVideo(db *sql.DB) *BDRepositoryVideo {
+	return &BDRepositoryVideo{
 		db: db,
 	}
 }

@@ -1,0 +1,442 @@
+{
+	"info": {
+		"_postman_id": "2f217438-e7d5-4c8d-bd08-1ad2d094f147",
+		"name": "CrudPlatform",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "23266366"
+	},
+	"item": [
+		{
+			"name": "Users",
+			"item": [
+				{
+					"name": "Delete",
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "mi_token_secreto",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "localhost:8086/users/89278898-99a8-4be9-a8cc-eea6b1c8d433",
+							"host": [
+								"localhost"
+							],
+							"port": "8086",
+							"path": [
+								"users",
+								"89278898-99a8-4be9-a8cc-eea6b1c8d433"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Update",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "mi_token_secreto",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"name\": \"Juan\",\n    \"email\": \"Juan@prueba.com\",\n    \"image_path\": \"/ruta/a/la/imagen/que/cambio.jpg\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "localhost:8086/users/89278898-99a8-4be9-a8cc-eea6b1c8d433",
+							"host": [
+								"localhost"
+							],
+							"port": "8086",
+							"path": [
+								"users",
+								"89278898-99a8-4be9-a8cc-eea6b1c8d433"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Create",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "mi_token_secreto",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"name\": \"Sebastian\",\n    \"email\": \"sebas@prueba.com\",\n    \"image_path\": \"/ruta/a/la/imagen.jpg\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "localhost:8086/users/",
+							"host": [
+								"localhost"
+							],
+							"port": "8086",
+							"path": [
+								"users",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Select",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "mi_token_secreto",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "localhost:8086/users/89278898-99a8-4be9-a8cc-eea6b1c8d433",
+							"host": [
+								"localhost"
+							],
+							"port": "8086",
+							"path": [
+								"users",
+								"89278898-99a8-4be9-a8cc-eea6b1c8d433"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Challenge",
+			"item": [
+				{
+					"name": "Delete",
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "mi_token_secreto",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "localhost:8086/challenge/41f4196e-e61d-4ad6-b93f-d0b15a2a44b3",
+							"host": [
+								"localhost"
+							],
+							"port": "8086",
+							"path": [
+								"challenge",
+								"41f4196e-e61d-4ad6-b93f-d0b15a2a44b3"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Update",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "mi_token_secreto",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"title\": \"Challengue 2 \",\n    \"description\": \"This is a one test2 \",\n    \"difficulty\": 2\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "localhost:8086/challenge/41f4196e-e61d-4ad6-b93f-d0b15a2a44b3",
+							"host": [
+								"localhost"
+							],
+							"port": "8086",
+							"path": [
+								"challenge",
+								"41f4196e-e61d-4ad6-b93f-d0b15a2a44b3"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Create",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "mi_token_secreto",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"title\": \"Challengue 1 \",\n    \"description\": \"This ir a one test\",\n    \"difficulty\": 1\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "localhost:8086/challenge/",
+							"host": [
+								"localhost"
+							],
+							"port": "8086",
+							"path": [
+								"challenge",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Select",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "mi_token_secreto",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "localhost:8086/challenge/41f4196e-e61d-4ad6-b93f-d0b15a2a44b3",
+							"host": [
+								"localhost"
+							],
+							"port": "8086",
+							"path": [
+								"challenge",
+								"41f4196e-e61d-4ad6-b93f-d0b15a2a44b3"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Videos",
+			"item": [
+				{
+					"name": "Delete",
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "mi_token_secreto",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "localhost:8086/video/8bcb4ed3-ff35-4848-94f9-ce30ac28fb20",
+							"host": [
+								"localhost"
+							],
+							"port": "8086",
+							"path": [
+								"video",
+								"8bcb4ed3-ff35-4848-94f9-ce30ac28fb20"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Update",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "mi_token_secreto",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"title\": \"Video 2 \",\n    \"description\": \"This is a Video 2 \"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "localhost:8086/video/8bcb4ed3-ff35-4848-94f9-ce30ac28fb20",
+							"host": [
+								"localhost"
+							],
+							"port": "8086",
+							"path": [
+								"video",
+								"8bcb4ed3-ff35-4848-94f9-ce30ac28fb20"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Create",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "mi_token_secreto",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"title\": \"Video 1\",\n    \"description\": \"Description Video 1\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "localhost:8086/video/",
+							"host": [
+								"localhost"
+							],
+							"port": "8086",
+							"path": [
+								"video",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Select",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "mi_token_secreto",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "localhost:8086/video/8bcb4ed3-ff35-4848-94f9-ce30ac28fb20",
+							"host": [
+								"localhost"
+							],
+							"port": "8086",
+							"path": [
+								"video",
+								"8bcb4ed3-ff35-4848-94f9-ce30ac28fb20"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		}
+	]
+}

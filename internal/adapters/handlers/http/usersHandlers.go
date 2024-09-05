@@ -11,11 +11,11 @@ import (
 )
 
 type managementHandler struct {
-	Service    ports.CommunicationServices
+	Service    ports.CommunicationUserServices
 	Repository ports.DBRepository
 }
 
-func newHandler(service ports.CommunicationServices, repo ports.DBRepository) *managementHandler {
+func newHandler(service ports.CommunicationUserServices, repo ports.DBRepository) *managementHandler {
 	return &managementHandler{
 		Service:    service,
 		Repository: repo,

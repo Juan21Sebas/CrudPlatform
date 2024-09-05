@@ -9,7 +9,7 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-type CommunicationServices interface {
+type CommunicationUserServices interface {
 	CreateUser(ctx *gin.Context, request *model.User) (*entity.Response, error)
 	SelectUser(ctx *gin.Context, request *model.GetUser) (*entity.Response, error)
 	UpdateUser(ctx *gin.Context, request *model.UpdateUser) (*entity.Response, error)

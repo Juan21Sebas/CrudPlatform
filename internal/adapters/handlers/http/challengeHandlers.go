@@ -5,30 +5,30 @@ import (
 
 	"github.com/gin-gonic/gin"
 
-	model "CrudPlatform/internal/core/domain/repository/model/users"
+	model "CrudPlatform/internal/core/domain/repository/model/challenges"
 	"CrudPlatform/internal/core/ports"
 )
 
-type managementHandler struct {
-	Service    ports.CommunicationUserServices
-	Repository ports.DBRepositoryUsers
+type managementChallengeHandler struct {
+	Service    ports.CommunicationChallengeServices
+	Repository ports.DBRepositoryChallenge
 }
 
-func newHandler(service ports.CommunicationUserServices, repo ports.DBRepositoryUsers) *managementHandler {
-	return &managementHandler{
+func newChallengeHandler(service ports.CommunicationChallengeServices, repo ports.DBRepositoryChallenge) *managementChallengeHandler {
+	return &managementChallengeHandler{
 		Service:    service,
 		Repository: repo,
 	}
 }
 
-func (o *managementHandler) postUsers() gin.HandlerFunc {
+func (o *managementChallengeHandler) postChallenge() gin.HandlerFunc {
 	return func(c *gin.Context) {
-		var User model.User
+		var User model.Challenge
 		if err := c.BindJSON(&User); err != nil {
 			c.JSON(http.StatusBadRequest, gin.H{"error": "invalid Request"})
 			return
 		}
-		entityResponse, err := o.Service.CreateUser(c, &User)
+		entityResponse, err := o.Service.CreateChallenge(c, &User)
 		if err != nil {
 			c.JSON(http.StatusNotFound, err.Error())
 			return
@@ -39,15 +39,15 @@ func (o *managementHandler) postUsers() gin.HandlerFunc {
 	}
 }
 
-func (o *managementHandler) getUsers() gin.HandlerFunc {
+func (o *managementChallengeHandler) getChallenge() gin.HandlerFunc {
 	return func(c *gin.Context) {
-		var User model.GetUser
-		User.Id = c.Param("id")
+		var User model.GetChallenge
+		User.ID = c.Param("id")
 		if err := c.ShouldBindQuery(&User); err != nil {
 			c.JSON(http.StatusBadRequest, gin.H{"error": "invalid Request "})
 			return
 		}
-		entityResponse, err := o.Service.SelectUser(c, &User)
+		entityResponse, err := o.Service.SelectChallenge(c, &User)
 		if err != nil {
 			c.JSON(http.StatusNotFound, err.Error())
 			return
@@ -58,10 +58,10 @@ func (o *managementHandler) getUsers() gin.HandlerFunc {
 	}
 }
 
-func (o *managementHandler) putUsers() gin.HandlerFunc {
+func (o *managementChallengeHandler) putChallenge() gin.HandlerFunc {
 	return func(c *gin.Context) {
-		var User model.UpdateUser
-		User.Id = c.Param("id")
+		var User model.UpdateChallenge
+		User.ID = c.Param("id")
 		if err := c.ShouldBindQuery(&User); err != nil {
 			c.JSON(http.StatusBadRequest, gin.H{"error": "invalid Request "})
 			return
@@ -70,7 +70,7 @@ func (o *managementHandler) putUsers() gin.HandlerFunc {
 			c.JSON(http.StatusBadRequest, gin.H{"error": "invalid Request "})
 			return
 		}
-		entityResponse, err := o.Service.UpdateUser(c, &User)
+		entityResponse, err := o.Service.UpdateChallenge(c, &User)
 		if err != nil {
 			c.JSON(http.StatusNotFound, err.Error())
 			return
@@ -81,15 +81,15 @@ func (o *managementHandler) putUsers() gin.HandlerFunc {
 	}
 }
 
-func (o *managementHandler) deleteUsers() gin.HandlerFunc {
+func (o *managementChallengeHandler) deleteChallenge() gin.HandlerFunc {
 	return func(c *gin.Context) {
-		var User model.DeleteUser
-		User.Id = c.Param("id")
+		var User model.DeleteChallenge
+		User.ID = c.Param("id")
 		if err := c.ShouldBindQuery(&User); err != nil {
 			c.JSON(http.StatusBadRequest, gin.H{"error": "invalid Request "})
 			return
 		}
-		entityResponse, err := o.Service.DeleteUser(c, &User)
+		entityResponse, err := o.Service.DeleteChallenge(c, &User)
 		if err != nil {
 			c.JSON(http.StatusNotFound, err.Error())
 			return

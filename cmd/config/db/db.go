@@ -22,8 +22,6 @@ func NewSQLiteDB() (*sql.DB, error) {
 	}
 
 	tables := []string{
-		"program_participants",
-		"programs",
 		"companies",
 		"challenges",
 		"users",
@@ -53,14 +51,12 @@ func NewSQLiteDB() (*sql.DB, error) {
 
 	// Creacion tabla challenges
 	_, err = db.Exec(`CREATE TABLE IF NOT EXISTS challenges (
-		id INTEGER PRIMARY KEY AUTOINCREMENT,
+		id TEXT PRIMARY KEY,
 		title TEXT,
 		description TEXT,
 		difficulty INTEGER,
-		user_id INTEGER,
-		created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-		updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-		FOREIGN KEY (user_id) REFERENCES users(id)
+		created_at TEXT,
+		updated_at TEXT
 	)`)
 	if err != nil {
 		fmt.Println("Error al crear la tabla challenges:", err)
@@ -82,38 +78,6 @@ func NewSQLiteDB() (*sql.DB, error) {
 	)`)
 	if err != nil {
 		fmt.Println("Error al crear la tabla companies:", err)
-		db.Close()
-		return nil, err
-	}
-
-	// Creacion tabla programs
-	_, err = db.Exec(`CREATE TABLE IF NOT EXISTS programs (
-		id INTEGER PRIMARY KEY AUTOINCREMENT,
-		title TEXT,
-		description TEXT,
-		start_date DATE,
-		end_date DATE,
-		user_id INTEGER,
-		created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-		updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-		FOREIGN KEY (user_id) REFERENCES users(id)
-	)`)
-	if err != nil {
-		fmt.Println("Error al crear la tabla programs:", err)
-		db.Close()
-		return nil, err
-	}
-
-	// Creacion tabla program_participants
-	_, err = db.Exec(`CREATE TABLE IF NOT EXISTS program_participants (
-		id INTEGER PRIMARY KEY AUTOINCREMENT,
-		program_id INTEGER,
-		entity_type TEXT,
-		entity_id INTEGER,
-		FOREIGN KEY (program_id) REFERENCES programs(id)
-	)`)
-	if err != nil {
-		fmt.Println("Error al crear la tabla program_participants:", err)
 		db.Close()
 		return nil, err
 	}

@@ -15,3 +15,14 @@ func NewBdRepository(db *sql.DB) *BDRepository {
 		db: db,
 	}
 }
+
+type BDRepositoryChallenge struct {
+	db *sql.DB
+	mu sync.Mutex
+}
+
+func NewBdRepositoryChallenge(db *sql.DB) *BDRepositoryChallenge {
+	return &BDRepositoryChallenge{
+		db: db,
+	}
+}

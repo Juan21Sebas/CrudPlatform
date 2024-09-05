@@ -6,24 +6,24 @@ import (
 	"strconv"
 
 	entity "CrudPlatform/internal/core/domain/repository"
-	model "CrudPlatform/internal/core/domain/repository/model/users"
+	model "CrudPlatform/internal/core/domain/repository/model/challenges"
 
 	"github.com/gin-gonic/gin"
 )
 
-type Repository struct {
-	repo ports.DBRepositoryUsers
+type RepositoryChallenge struct {
+	repo ports.DBRepositoryChallenge
 }
 
-func NewService(repo ports.DBRepositoryUsers) *Repository {
-	return &Repository{
+func NewServiceChallenge(repo ports.DBRepositoryChallenge) *RepositoryChallenge {
+	return &RepositoryChallenge{
 		repo: repo,
 	}
 }
 
-func (r *Repository) CreateUser(ctx *gin.Context, request *model.User) (*entity.Response, error) {
+func (r *RepositoryChallenge) CreateChallenge(ctx *gin.Context, request *model.Challenge) (*entity.Response, error) {
 
-	resp, err := r.repo.CreateUser(ctx, request)
+	resp, err := r.repo.CreateChallenge(ctx, request)
 	if err != nil {
 		return nil, err
 	}
@@ -38,15 +38,15 @@ func (r *Repository) CreateUser(ctx *gin.Context, request *model.User) (*entity.
 					Detail:       "Registro Creado",
 				},
 			},
-			Source: "Create User",
+			Source: "Create Challenge",
 		},
 	}, nil
 
 }
 
-func (r *Repository) SelectUser(ctx *gin.Context, request *model.GetUser) (*entity.Response, error) {
+func (r *RepositoryChallenge) SelectChallenge(ctx *gin.Context, request *model.GetChallenge) (*entity.Response, error) {
 
-	resp, err := r.repo.SelectUser(ctx, request)
+	resp, err := r.repo.SelectChallenge(ctx, request)
 	if err != nil {
 		return nil, err
 	}
@@ -61,15 +61,15 @@ func (r *Repository) SelectUser(ctx *gin.Context, request *model.GetUser) (*enti
 					Detail:       "Registro Seleccionado",
 				},
 			},
-			Source: "Select User",
+			Source: "Select Challenge",
 		},
 	}, nil
 
 }
 
-func (r *Repository) UpdateUser(ctx *gin.Context, request *model.UpdateUser) (*entity.Response, error) {
+func (r *RepositoryChallenge) UpdateChallenge(ctx *gin.Context, request *model.UpdateChallenge) (*entity.Response, error) {
 
-	resp, err := r.repo.UpdateUser(ctx, request)
+	resp, err := r.repo.UpdateChallenge(ctx, request)
 	if err != nil {
 		return nil, err
 	}
@@ -84,15 +84,15 @@ func (r *Repository) UpdateUser(ctx *gin.Context, request *model.UpdateUser) (*e
 					Detail:       "Registro Actualizado",
 				},
 			},
-			Source: "Update User",
+			Source: "Update Challenge",
 		},
 	}, nil
 
 }
 
-func (r *Repository) DeleteUser(ctx *gin.Context, request *model.DeleteUser) (*entity.Response, error) {
+func (r *RepositoryChallenge) DeleteChallenge(ctx *gin.Context, request *model.DeleteChallenge) (*entity.Response, error) {
 
-	err := r.repo.DeleteUser(ctx, request)
+	err := r.repo.DeleteChallenge(ctx, request)
 	if err != nil {
 		return nil, err
 	}
@@ -106,7 +106,7 @@ func (r *Repository) DeleteUser(ctx *gin.Context, request *model.DeleteUser) (*e
 					Detail:       "Registro Eliminado",
 				},
 			},
-			Source: "Delete User",
+			Source: "Delete Challenge",
 		},
 	}, nil
 

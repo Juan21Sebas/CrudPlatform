@@ -22,7 +22,7 @@ func NewSQLiteDB() (*sql.DB, error) {
 	}
 
 	tables := []string{
-		"companies",
+		"videos",
 		"challenges",
 		"users",
 	}

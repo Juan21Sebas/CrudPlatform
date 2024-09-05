@@ -1,0 +1,17 @@
+-- Script para crear la tabla "users" si no existe
+CREATE TABLE IF NOT EXISTS users (
+    id TEXT PRIMARY KEY,
+    title TEXT,
+    description TEXT,
+    status BOOLEAN,
+    FOREIGN KEY (status) REFERENCES status(name)
+);
+
+-- Script para crear la tabla "status" si no existe
+CREATE TABLE IF NOT EXISTS status (
+    name TEXT PRIMARY KEY,
+    description TEXT,
+    active BOOLEAN
+);
+
+

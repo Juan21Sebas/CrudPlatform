@@ -1,0 +1,246 @@
+openapi: 3.0.3
+info:
+  title: Swagger Task Management
+  description: |-
+
+    The RESTful API developed in Go is a robust platform for efficient task management. It offers users the ability to perform basic CRUD (Create, Read, Update, Delete) operations on tasks, thus providing a complete task management experience.
+    
+    Task Creation: Users can create new tasks by providing necessary information such as title, description, due date, etc. The API validates the data provided and creates a new task in the database.
+    
+    Reading Tasks: The API allows users to access the list of existing tasks. This allows them to view all available tasks, along with their details such as title, description, and status.
+    
+    Updating tasks: Users can modify the details of an existing task, such as its title, description, status, or due date. The API ensures that changes are correctly reflected in the database and updated consistently.
+    
+    Deleting Tasks: Users have the ability to delete tasks that are no longer relevant or necessary. By doing so, the API safely removes the corresponding task from the database.
+    
+    In addition to these basic operations, the API is designed to efficiently handle multiple concurrent requests. This is achieved through concurrency techniques and goroutines in Go, ensuring optimal performance even under heavy workloads.
+    
+    Links Utiles:
+    - [The CrudPlatform repository](https://github.com/Juan21Sebas/CrudPlatform)
+    
+  termsOfService: http://swagger.io/terms/
+  contact:
+    email: juansebastiansancheza@gmail.com
+  version: 1.0.0
+
+tags:
+  - name: adapterTaskManagement
+    description: All about task creation.
+    externalDocs:
+      description: Find out more
+      url: http://swagger.io
+
+paths:
+  /task:
+    post:
+      tags:
+        - adapterTaskManagementResolver
+      summary: add new task
+      description: Allows users to create a new task by providing a title, description, and status (pending, in progress, completed).
+      operationId: addTask
+      requestBody:
+        description: Create new Task
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/addTask'
+        required: true
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/addTask200'          
+        '405':
+          description: Invalid input
+          
+  /task/id:
+    get:
+      tags:
+        - adapterTaskManagementResolver
+      summary: select task
+      description: The API should allow users to get details about a specific task using its ID.
+      operationId: selectTask
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/selectTask200'          
+        '405':
+          description: Invalid input  
+  
+  /task/ids:
+    put:
+      tags:
+        - adapterTaskManagementResolver
+      summary: update task
+      description: Users must be able to update the title, description, or status of an existing task.
+      operationId: putTask
+      requestBody:
+        description: update new Task
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/updateTask'
+        required: true
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/updateTask200'          
+        '405':
+          description: Invalid input       
+  
+  /task/:id:
+    delete:
+      tags:
+        - adapterTaskManagementResolver
+      summary: delete task
+      description: Users should be able to delete a task using their ID.
+      operationId: deleteTask
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/deleteTask200'          
+        '405':
+          description: Invalid input 
+          
+components:
+  schemas:
+    addTask:
+      type: object
+      properties:
+        title:
+          type: string
+          example: Título de la tarea
+        description:
+          type: string
+          example: Descripción de la tarea
+        status:
+          type: string
+          example: Completada
+    
+    updateTask:
+      type: object
+      properties:
+        title:
+          type: string
+          example: Cambio
+        description:
+          type: string
+          example: Cambio
+        status:
+          type: string
+          example: Completada
+          
+    addTask200:
+      type: object
+      properties:
+        data:
+            type: string  
+            example: Su ID es bea5e40a-0068-4eff-8b6e-caf31b1601e2
+        result:
+            type: object  
+            properties: 
+              intercode:
+                  type: string
+                  example: 200
+              message:
+                  type: string
+                  example: Ok
+              Detail:
+                  type: string
+                  example: "Registro Creado"
+              source:
+                  type: string 
+                  example: Create Task
+                  
+    selectTask200:
+      type: object
+      properties:
+        data:
+          type: object  
+          properties: 
+            title:
+              type: string
+              example: Título de la tarea
+            description:
+              type: string
+              example: Descripción de la tarea
+            status:
+              type: string
+              example: Completada
+        result:
+            type: object  
+            properties: 
+              intercode:
+                  type: string
+                  example: 200
+              message:
+                  type: string
+                  example: Ok
+              Detail:
+                  type: string
+                  example: "Registro Seleccionado"
+              source:
+                  type: string 
+                  example: Select Task  
+                  
+    updateTask200:
+      type: object
+      properties:
+        data:
+          type: object  
+          properties: 
+            title:
+              type: string
+              example: Cambio
+            description:
+              type: string
+              example: Cambio
+            status:
+              type: string
+              example: Completada
+        result:
+            type: object  
+            properties: 
+              intercode:
+                  type: string
+                  example: 200
+              message:
+                  type: string
+                  example: Ok
+              Detail:
+                  type: string
+                  example: "Registro Actualizado"
+              source:
+                  type: string 
+                  example: Update Task  
+    
+    deleteTask200:
+      type: object
+      properties:
+        result:
+            type: object  
+            properties: 
+              intercode:
+                  type: string
+                  example: 200
+              message:
+                  type: string
+                  example: Ok
+              Detail:
+                  type: string
+                  example: "Registro Eliminado"
+              source:
+                  type: string 
+                  example: Delete Task              
+    

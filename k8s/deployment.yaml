@@ -1,0 +1,19 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: starshipcommsresolver-deployment
+spec:
+  replicas: 1  # You can adjust this number as needed
+  selector:
+    matchLabels:
+      app: starshipcommsresolver
+  template:
+    metadata:
+      labels:
+        app: starshipcommsresolver
+    spec:
+      containers:
+      - name: starshipcommsresolver
+        image: us-central1-docker.pkg.dev/vocal-spirit-396723/commands-resolve/stars:1.0 # Update with your actual Docker image repository
+        ports:
+        - containerPort: 8080

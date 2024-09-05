@@ -1,0 +1,17 @@
+version: '3'
+
+services:
+  sqlite:
+    image: alpine:latest
+    command: sh -c "apk add --no-cache sqlite && chmod 777 /app/task.db && tail -f /dev/null"
+    volumes:
+      - ./task.db:/app/task.db
+   
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - "8086:8086"
+    depends_on:
+      - sqlite

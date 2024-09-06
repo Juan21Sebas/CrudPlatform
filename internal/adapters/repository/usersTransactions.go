@@ -2,12 +2,10 @@ package repository
 
 import (
 	model "CrudPlatform/internal/core/domain/repository/model/users"
-
+	schema "CrudPlatform/internal/core/domain/repository/schema/users"
 	"database/sql"
 	"fmt"
 	"time"
-
-	schema "CrudPlatform/internal/core/domain/repository/schema/users"
 
 	"github.com/gin-gonic/gin"
 	"github.com/google/uuid"
@@ -18,19 +16,13 @@ func (p *BDRepository) CreateUser(ctx *gin.Context, request *model.User) (string
 	defer p.mu.Unlock()
 
 	id := uuid.NewString()
-	now := time.Now().UTC().Format("2006-01-02 15:04:05")
+	now := time.Now().UTC()
 
 	query := `
 		INSERT INTO users (id, name, email, image_path, created_at, updated_at) 
-		VALUES (?, ?, ?, ?, ?, ?)
+		VALUES ($1, $2, $3, $4, $5, $6)
 	`
-	stmt, err := p.db.Prepare(query)
-	if err != nil {
-		return "", err
-	}
-	defer stmt.Close()
-
-	_, err = stmt.Exec(id, request.Name, request.Email, request.ImagePath, now, now)
+	_, err := p.db.Exec(query, id, request.Name, request.Email, request.ImagePath, now, now)
 	if err != nil {
 		return "", fmt.Errorf("error executing statement: %w", err)
 	}
@@ -39,11 +31,10 @@ func (p *BDRepository) CreateUser(ctx *gin.Context, request *model.User) (string
 }
 
 func (p *BDRepository) SelectUser(ctx *gin.Context, request *model.GetUser) (*schema.UsersGetResponse, error) {
-
 	p.mu.Lock()
 	defer p.mu.Unlock()
 
-	query := "SELECT name, email, image_path, created_at, updated_at FROM users WHERE id = ?"
+	query := "SELECT name, email, image_path, created_at, updated_at FROM users WHERE id = $1"
 	row := p.db.QueryRow(query, request.Id)
 
 	var response schema.UsersGetResponse
@@ -63,21 +54,15 @@ func (p *BDRepository) UpdateUser(ctx *gin.Context, request *model.UpdateUser) (
 	p.mu.Lock()
 	defer p.mu.Unlock()
 
-	now := time.Now().UTC().Format("2006-01-02 15:04:05")
+	now := time.Now().UTC()
 
-	query := "UPDATE users SET name = ?, email = ?, image_path = ?, updated_at = ? WHERE id = ?"
-	stmt, err := p.db.Prepare(query)
-	if err != nil {
-		return nil, fmt.Errorf("error preparing update statement: %w", err)
-	}
-	defer stmt.Close()
-
-	_, err = stmt.Exec(request.Name, request.Email, request.ImagePath, now, request.Id)
+	query := "UPDATE users SET name = $1, email = $2, image_path = $3, updated_at = $4 WHERE id = $5"
+	_, err := p.db.Exec(query, request.Name, request.Email, request.ImagePath, now, request.Id)
 	if err != nil {
 		return nil, fmt.Errorf("error executing update: %w", err)
 	}
 
-	updatedQuery := "SELECT name, email, image_path, updated_at FROM users WHERE id = ?"
+	updatedQuery := "SELECT name, email, image_path, updated_at FROM users WHERE id = $1"
 	updatedRow := p.db.QueryRow(updatedQuery, request.Id)
 
 	var response schema.UsersUpdateResponse
@@ -93,18 +78,11 @@ func (p *BDRepository) UpdateUser(ctx *gin.Context, request *model.UpdateUser) (
 }
 
 func (p *BDRepository) DeleteUser(ctx *gin.Context, request *model.DeleteUser) error {
-
 	p.mu.Lock()
 	defer p.mu.Unlock()
 
-	query := "DELETE FROM users WHERE id = ?"
-	stmt, err := p.db.Prepare(query)
-	if err != nil {
-		return err
-	}
-	defer stmt.Close()
-
-	result, err := stmt.Exec(request.Id)
+	query := "DELETE FROM users WHERE id = $1"
+	result, err := p.db.Exec(query, request.Id)
 	if err != nil {
 		return err
 	}
@@ -114,8 +92,8 @@ func (p *BDRepository) DeleteUser(ctx *gin.Context, request *model.DeleteUser) e
 		return err
 	}
 
-	if rowsAffected > 0 {
-		return nil
+	if rowsAffected == 0 {
+		return fmt.Errorf("no user found with id %s", request.Id)
 	}
 
 	return nil

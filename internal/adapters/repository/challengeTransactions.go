@@ -16,19 +16,13 @@ func (p *BDRepositoryChallenge) CreateChallenge(ctx *gin.Context, request *model
 	defer p.mu.Unlock()
 
 	id := uuid.NewString()
-	now := time.Now().UTC().Format("2006-01-02 15:04:05")
+	now := time.Now().UTC()
 
 	query := `
 		INSERT INTO challenges (id, title, description, difficulty, created_at, updated_at) 
-		VALUES (?, ?, ?, ?, ?, ?)
+		VALUES ($1, $2, $3, $4, $5, $6)
 	`
-	stmt, err := p.db.Prepare(query)
-	if err != nil {
-		return "", err
-	}
-	defer stmt.Close()
-
-	_, err = stmt.Exec(id, request.Title, request.Description, request.Difficulty, now, now)
+	_, err := p.db.Exec(query, id, request.Title, request.Description, request.Difficulty, now, now)
 	if err != nil {
 		return "", fmt.Errorf("error executing statement: %w", err)
 	}
@@ -40,7 +34,7 @@ func (p *BDRepositoryChallenge) SelectChallenge(ctx *gin.Context, request *model
 	p.mu.Lock()
 	defer p.mu.Unlock()
 
-	query := "SELECT title, description, difficulty, created_at, updated_at FROM challenges WHERE id = ?"
+	query := "SELECT title, description, difficulty, created_at, updated_at FROM challenges WHERE id = $1"
 	row := p.db.QueryRow(query, request.ID)
 
 	var response schema.ChallengeGetResponse
@@ -60,21 +54,15 @@ func (p *BDRepositoryChallenge) UpdateChallenge(ctx *gin.Context, request *model
 	p.mu.Lock()
 	defer p.mu.Unlock()
 
-	now := time.Now().UTC().Format("2006-01-02 15:04:05")
+	now := time.Now().UTC()
 
-	query := "UPDATE challenges SET title = ?, description = ?, difficulty = ?, updated_at = ? WHERE id = ?"
-	stmt, err := p.db.Prepare(query)
-	if err != nil {
-		return nil, fmt.Errorf("error preparing update statement: %w", err)
-	}
-	defer stmt.Close()
-
-	_, err = stmt.Exec(request.Title, request.Description, request.Difficulty, now, request.ID)
+	query := "UPDATE challenges SET title = $1, description = $2, difficulty = $3, updated_at = $4 WHERE id = $5"
+	_, err := p.db.Exec(query, request.Title, request.Description, request.Difficulty, now, request.ID)
 	if err != nil {
 		return nil, fmt.Errorf("error executing update: %w", err)
 	}
 
-	updatedQuery := "SELECT title, description, difficulty, updated_at FROM challenges WHERE id = ?"
+	updatedQuery := "SELECT title, description, difficulty, updated_at FROM challenges WHERE id = $1"
 	updatedRow := p.db.QueryRow(updatedQuery, request.ID)
 
 	var response schema.ChallengeUpdateResponse
@@ -93,14 +81,8 @@ func (p *BDRepositoryChallenge) DeleteChallenge(ctx *gin.Context, request *model
 	p.mu.Lock()
 	defer p.mu.Unlock()
 
-	query := "DELETE FROM challenges WHERE id = ?"
-	stmt, err := p.db.Prepare(query)
-	if err != nil {
-		return err
-	}
-	defer stmt.Close()
-
-	result, err := stmt.Exec(request.ID)
+	query := "DELETE FROM challenges WHERE id = $1"
+	result, err := p.db.Exec(query, request.ID)
 	if err != nil {
 		return err
 	}

@@ -4,12 +4,21 @@ import (
 	"database/sql"
 	"fmt"
 
-	_ "github.com/mattn/go-sqlite3"
+	_ "github.com/lib/pq"
 )
 
-func NewSQLiteDB() (*sql.DB, error) {
+func NewPostgreSQLDB() (*sql.DB, error) {
 
-	db, err := sql.Open("sqlite3", "./talentpitch.db")
+	host := "localhost"
+	port := "5432"
+	dbname := "talentpitch"
+	user := "juansebastiansanchez"
+	password := "admin"
+
+	connStr := fmt.Sprintf("host=%s port=%s dbname=%s user=%s password=%s sslmode=disable",
+		host, port, dbname, user, password)
+
+	db, err := sql.Open("postgres", connStr)
 	if err != nil {
 		fmt.Println("Error al abrir la base de datos:", err)
 		return nil, err
@@ -34,14 +43,14 @@ func NewSQLiteDB() (*sql.DB, error) {
 		}
 	}
 
-	// Creacion tabla users
+	// Creación tabla users
 	_, err = db.Exec(`CREATE TABLE IF NOT EXISTS users (
 		id TEXT PRIMARY KEY,
 		name TEXT,
 		email TEXT UNIQUE,
 		image_path TEXT,
-		created_at TEXT,
-		updated_at TEXT
+		created_at TIMESTAMP,
+		updated_at TIMESTAMP
 	)`)
 	if err != nil {
 		fmt.Println("Error al crear la tabla users:", err)
@@ -49,14 +58,14 @@ func NewSQLiteDB() (*sql.DB, error) {
 		return nil, err
 	}
 
-	// Creacion tabla challenges
+	// Creación tabla challenges
 	_, err = db.Exec(`CREATE TABLE IF NOT EXISTS challenges (
 		id TEXT PRIMARY KEY,
 		title TEXT,
 		description TEXT,
 		difficulty INTEGER,
-		created_at TEXT,
-		updated_at TEXT
+		created_at TIMESTAMP,
+		updated_at TIMESTAMP
 	)`)
 	if err != nil {
 		fmt.Println("Error al crear la tabla challenges:", err)
@@ -64,13 +73,13 @@ func NewSQLiteDB() (*sql.DB, error) {
 		return nil, err
 	}
 
-	// Creacion tabla videos
+	// Creación tabla videos
 	_, err = db.Exec(`CREATE TABLE IF NOT EXISTS videos (
 		id TEXT PRIMARY KEY,
 		title TEXT,
 		description TEXT,
-		created_at TEXT,
-		updated_at TEXT
+		created_at TIMESTAMP,
+		updated_at TIMESTAMP
 	)`)
 	if err != nil {
 		fmt.Println("Error al crear la tabla videos:", err)

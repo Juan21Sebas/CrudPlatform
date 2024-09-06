@@ -16,19 +16,13 @@ func (p *BDRepositoryVideo) CreateVideo(ctx *gin.Context, request *model.Videos)
 	defer p.mu.Unlock()
 
 	id := uuid.NewString()
-	now := time.Now().UTC().Format("2006-01-02 15:04:05")
+	now := time.Now().UTC()
 
 	query := `
 		INSERT INTO videos (id, title, description, created_at, updated_at) 
-		VALUES (?, ?, ?, ?, ?)
+		VALUES ($1, $2, $3, $4, $5)
 	`
-	stmt, err := p.db.Prepare(query)
-	if err != nil {
-		return "", err
-	}
-	defer stmt.Close()
-
-	_, err = stmt.Exec(id, request.Title, request.Description, now, now)
+	_, err := p.db.Exec(query, id, request.Title, request.Description, now, now)
 	if err != nil {
 		return "", fmt.Errorf("error executing statement: %w", err)
 	}
@@ -40,7 +34,7 @@ func (p *BDRepositoryVideo) SelectVideo(ctx *gin.Context, request *model.GetVide
 	p.mu.Lock()
 	defer p.mu.Unlock()
 
-	query := "SELECT title, description, created_at, updated_at FROM videos WHERE id = ?"
+	query := "SELECT title, description, created_at, updated_at FROM videos WHERE id = $1"
 	row := p.db.QueryRow(query, request.ID)
 
 	var response schema.VideosGetResponse
@@ -60,21 +54,15 @@ func (p *BDRepositoryVideo) UpdateVideo(ctx *gin.Context, request *model.UpdateV
 	p.mu.Lock()
 	defer p.mu.Unlock()
 
-	now := time.Now().UTC().Format("2006-01-02 15:04:05")
+	now := time.Now().UTC()
 
-	query := "UPDATE videos SET title = ?, description = ?, updated_at = ? WHERE id = ?"
-	stmt, err := p.db.Prepare(query)
-	if err != nil {
-		return nil, fmt.Errorf("error preparing update statement: %w", err)
-	}
-	defer stmt.Close()
-
-	_, err = stmt.Exec(request.Title, request.Description, now, request.ID)
+	query := "UPDATE videos SET title = $1, description = $2, updated_at = $3 WHERE id = $4"
+	_, err := p.db.Exec(query, request.Title, request.Description, now, request.ID)
 	if err != nil {
 		return nil, fmt.Errorf("error executing update: %w", err)
 	}
 
-	updatedQuery := "SELECT title, description, updated_at FROM videos WHERE id = ?"
+	updatedQuery := "SELECT title, description, updated_at FROM videos WHERE id = $1"
 	updatedRow := p.db.QueryRow(updatedQuery, request.ID)
 
 	var response schema.VideosUpdateResponse
@@ -93,14 +81,8 @@ func (p *BDRepositoryVideo) DeleteVideo(ctx *gin.Context, request *model.DeleteV
 	p.mu.Lock()
 	defer p.mu.Unlock()
 
-	query := "DELETE FROM videos WHERE id = ?"
-	stmt, err := p.db.Prepare(query)
-	if err != nil {
-		return err
-	}
-	defer stmt.Close()
-
-	result, err := stmt.Exec(request.ID)
+	query := "DELETE FROM videos WHERE id = $1"
+	result, err := p.db.Exec(query, request.ID)
 	if err != nil {
 		return err
 	}

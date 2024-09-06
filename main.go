@@ -7,7 +7,7 @@ import (
 )
 
 func main() {
-	dbInstance, err := db.NewSQLiteDB()
+	dbInstance, err := db.NewPostgreSQLDB()
 	if err != nil {
 		log.Fatal("Error opening database:", err)
 	}

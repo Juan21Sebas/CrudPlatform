@@ -29,29 +29,13 @@ func TestBDRepositoryChallenge(t *testing.T) {
 			Difficulty:  3,
 		}
 
-		mock.ExpectPrepare("INSERT INTO challenges").
-			ExpectExec().
+		mock.ExpectExec("INSERT INTO challenges").
 			WithArgs(sqlmock.AnyArg(), challenge.Title, challenge.Description, challenge.Difficulty, sqlmock.AnyArg(), sqlmock.AnyArg()).
 			WillReturnResult(sqlmock.NewResult(1, 1))
 
 		id, err := repo.CreateChallenge(ctx, challenge)
 		assert.NoError(t, err)
 		assert.NotEmpty(t, id)
-	})
-
-	t.Run("CreateChallenge_PrepareError", func(t *testing.T) {
-		challenge := &challenges.Challenge{
-			Title:       "Test Challenge",
-			Description: "This is a test challenge",
-			Difficulty:  3,
-		}
-
-		mock.ExpectPrepare("INSERT INTO challenges").WillReturnError(fmt.Errorf("error de preparación"))
-
-		id, err := repo.CreateChallenge(ctx, challenge)
-		assert.Error(t, err)
-		assert.Empty(t, id)
-		assert.Contains(t, err.Error(), "error de preparación")
 	})
 
 	t.Run("CreateChallenge_ExecError", func(t *testing.T) {
@@ -61,8 +45,7 @@ func TestBDRepositoryChallenge(t *testing.T) {
 			Difficulty:  3,
 		}
 
-		mock.ExpectPrepare("INSERT INTO challenges").
-			ExpectExec().
+		mock.ExpectExec("INSERT INTO challenges").
 			WithArgs(sqlmock.AnyArg(), challenge.Title, challenge.Description, challenge.Difficulty, sqlmock.AnyArg(), sqlmock.AnyArg()).
 			WillReturnError(fmt.Errorf("error de ejecución"))
 
@@ -77,7 +60,7 @@ func TestBDRepositoryChallenge(t *testing.T) {
 		rows := sqlmock.NewRows([]string{"title", "description", "difficulty", "created_at", "updated_at"}).
 			AddRow("Test Challenge", "This is a test challenge", 3, time.Now(), time.Now())
 
-		mock.ExpectQuery("SELECT (.+) FROM challenges WHERE id = ?").
+		mock.ExpectQuery("SELECT (.+) FROM challenges WHERE id = \\$1").
 			WithArgs(request.ID).
 			WillReturnRows(rows)
 
@@ -91,7 +74,7 @@ func TestBDRepositoryChallenge(t *testing.T) {
 	t.Run("SelectChallenge_NotFound", func(t *testing.T) {
 		request := &challenges.GetChallenge{ID: "999"}
 
-		mock.ExpectQuery("SELECT (.+) FROM challenges WHERE id = ?").
+		mock.ExpectQuery("SELECT (.+) FROM challenges WHERE id = \\$1").
 			WithArgs(request.ID).
 			WillReturnError(sql.ErrNoRows)
 
@@ -104,7 +87,7 @@ func TestBDRepositoryChallenge(t *testing.T) {
 	t.Run("SelectChallenge_ScanError", func(t *testing.T) {
 		request := &challenges.GetChallenge{ID: "123"}
 
-		mock.ExpectQuery("SELECT (.+) FROM challenges WHERE id = ?").
+		mock.ExpectQuery("SELECT (.+) FROM challenges WHERE id = \\$1").
 			WithArgs(request.ID).
 			WillReturnRows(sqlmock.NewRows([]string{"title", "description", "difficulty", "created_at", "updated_at"}).
 				AddRow("Test Challenge", "This is a test challenge", "no es un número", time.Now(), time.Now()))
@@ -123,15 +106,14 @@ func TestBDRepositoryChallenge(t *testing.T) {
 			Difficulty:  4,
 		}
 
-		mock.ExpectPrepare("UPDATE challenges").
-			ExpectExec().
+		mock.ExpectExec("UPDATE challenges").
 			WithArgs(request.Title, request.Description, request.Difficulty, sqlmock.AnyArg(), request.ID).
 			WillReturnResult(sqlmock.NewResult(0, 1))
 
 		rows := sqlmock.NewRows([]string{"title", "description", "difficulty", "updated_at"}).
 			AddRow(request.Title, request.Description, request.Difficulty, time.Now())
 
-		mock.ExpectQuery("SELECT (.+) FROM challenges WHERE id = ?").
+		mock.ExpectQuery("SELECT (.+) FROM challenges WHERE id = \\$1").
 			WithArgs(request.ID).
 			WillReturnRows(rows)
 
@@ -142,22 +124,6 @@ func TestBDRepositoryChallenge(t *testing.T) {
 		assert.Equal(t, request.Difficulty, challenge.Difficulty)
 	})
 
-	t.Run("UpdateChallenge_PrepareError", func(t *testing.T) {
-		request := &challenges.UpdateChallenge{
-			ID:          "123",
-			Title:       "Updated Challenge",
-			Description: "This is an updated test challenge",
-			Difficulty:  4,
-		}
-
-		mock.ExpectPrepare("UPDATE challenges").WillReturnError(fmt.Errorf("error de preparación"))
-
-		challenge, err := repo.UpdateChallenge(ctx, request)
-		assert.Error(t, err)
-		assert.Nil(t, challenge)
-		assert.Contains(t, err.Error(), "error preparing update statement")
-	})
-
 	t.Run("UpdateChallenge_ExecError", func(t *testing.T) {
 		request := &challenges.UpdateChallenge{
 			ID:          "123",
@@ -166,8 +132,7 @@ func TestBDRepositoryChallenge(t *testing.T) {
 			Difficulty:  4,
 		}
 
-		mock.ExpectPrepare("UPDATE challenges").
-			ExpectExec().
+		mock.ExpectExec("UPDATE challenges").
 			WithArgs(request.Title, request.Description, request.Difficulty, sqlmock.AnyArg(), request.ID).
 			WillReturnError(fmt.Errorf("error de ejecución"))
 
@@ -185,12 +150,11 @@ func TestBDRepositoryChallenge(t *testing.T) {
 			Difficulty:  4,
 		}
 
-		mock.ExpectPrepare("UPDATE challenges").
-			ExpectExec().
+		mock.ExpectExec("UPDATE challenges").
 			WithArgs(request.Title, request.Description, request.Difficulty, sqlmock.AnyArg(), request.ID).
 			WillReturnResult(sqlmock.NewResult(0, 1))
 
-		mock.ExpectQuery("SELECT (.+) FROM challenges WHERE id = ?").
+		mock.ExpectQuery("SELECT (.+) FROM challenges WHERE id = \\$1").
 			WithArgs(request.ID).
 			WillReturnError(sql.ErrNoRows)
 
@@ -208,12 +172,11 @@ func TestBDRepositoryChallenge(t *testing.T) {
 			Difficulty:  4,
 		}
 
-		mock.ExpectPrepare("UPDATE challenges").
-			ExpectExec().
+		mock.ExpectExec("UPDATE challenges").
 			WithArgs(request.Title, request.Description, request.Difficulty, sqlmock.AnyArg(), request.ID).
 			WillReturnResult(sqlmock.NewResult(0, 1))
 
-		mock.ExpectQuery("SELECT (.+) FROM challenges WHERE id = ?").
+		mock.ExpectQuery("SELECT (.+) FROM challenges WHERE id = \\$1").
 			WithArgs(request.ID).
 			WillReturnRows(sqlmock.NewRows([]string{"title", "description", "difficulty", "updated_at"}).
 				AddRow(request.Title, request.Description, "no es un número", time.Now()))
@@ -227,8 +190,7 @@ func TestBDRepositoryChallenge(t *testing.T) {
 	t.Run("DeleteChallenge", func(t *testing.T) {
 		request := &challenges.DeleteChallenge{ID: "123"}
 
-		mock.ExpectPrepare("DELETE FROM challenges").
-			ExpectExec().
+		mock.ExpectExec("DELETE FROM challenges").
 			WithArgs(request.ID).
 			WillReturnResult(sqlmock.NewResult(0, 1))
 
@@ -239,31 +201,19 @@ func TestBDRepositoryChallenge(t *testing.T) {
 	t.Run("DeleteChallenge_NotFound", func(t *testing.T) {
 		request := &challenges.DeleteChallenge{ID: "999"}
 
-		mock.ExpectPrepare("DELETE FROM challenges").
-			ExpectExec().
+		mock.ExpectExec("DELETE FROM challenges").
 			WithArgs(request.ID).
 			WillReturnResult(sqlmock.NewResult(0, 0))
 
 		err := repo.DeleteChallenge(ctx, request)
 		assert.Error(t, err)
-		assert.Contains(t, err.Error(), "not found")
-	})
-
-	t.Run("DeleteChallenge_PrepareError", func(t *testing.T) {
-		request := &challenges.DeleteChallenge{ID: "123"}
-
-		mock.ExpectPrepare("DELETE FROM challenges").WillReturnError(fmt.Errorf("error de preparación"))
-
-		err := repo.DeleteChallenge(ctx, request)
-		assert.Error(t, err)
-		assert.Contains(t, err.Error(), "error de preparación")
+		assert.Contains(t, err.Error(), "challenge with id 999 not found")
 	})
 
 	t.Run("DeleteChallenge_ExecError", func(t *testing.T) {
 		request := &challenges.DeleteChallenge{ID: "123"}
 
-		mock.ExpectPrepare("DELETE FROM challenges").
-			ExpectExec().
+		mock.ExpectExec("DELETE FROM challenges").
 			WithArgs(request.ID).
 			WillReturnError(fmt.Errorf("error de ejecución"))
 
@@ -275,8 +225,7 @@ func TestBDRepositoryChallenge(t *testing.T) {
 	t.Run("DeleteChallenge_RowsAffectedError", func(t *testing.T) {
 		request := &challenges.DeleteChallenge{ID: "123"}
 
-		mock.ExpectPrepare("DELETE FROM challenges").
-			ExpectExec().
+		mock.ExpectExec("DELETE FROM challenges").
 			WithArgs(request.ID).
 			WillReturnResult(sqlmock.NewErrorResult(fmt.Errorf("error de filas afectadas")))
 
@@ -284,17 +233,4 @@ func TestBDRepositoryChallenge(t *testing.T) {
 		assert.Error(t, err)
 		assert.Contains(t, err.Error(), "error de filas afectadas")
 	})
-
-	t.Run("DeleteChallenge_Success", func(t *testing.T) {
-		request := &challenges.DeleteChallenge{ID: "123"}
-
-		mock.ExpectPrepare("DELETE FROM challenges").
-			ExpectExec().
-			WithArgs(request.ID).
-			WillReturnResult(sqlmock.NewResult(0, 1))
-
-		err := repo.DeleteChallenge(ctx, request)
-		assert.NoError(t, err)
-	})
-
 }

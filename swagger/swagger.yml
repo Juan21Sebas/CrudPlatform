@@ -1,19 +1,34 @@
 openapi: 3.0.3
 info:
-  title: Swagger Task Management
+  title: Swagger CrudPlatform
   description: |-
 
-    The RESTful API developed in Go is a robust platform for efficient task management. It offers users the ability to perform basic CRUD (Create, Read, Update, Delete) operations on tasks, thus providing a complete task management experience.
+
+    CrudPlatform is a sophisticated Go-based RESTful API designed for managing users, challenges, and videos. Built with a hexagonal architecture and following domain-driven design principles, it offers a robust and scalable solution for content management and user interaction.
     
-    Task Creation: Users can create new tasks by providing necessary information such as title, description, due date, etc. The API validates the data provided and creates a new task in the database.
+    Key Features:
     
-    Reading Tasks: The API allows users to access the list of existing tasks. This allows them to view all available tasks, along with their details such as title, description, and status.
+    User Management: The platform provides comprehensive CRUD operations for user accounts, allowing for registration, profile updates, and account management.
     
-    Updating tasks: Users can modify the details of an existing task, such as its title, description, status, or due date. The API ensures that changes are correctly reflected in the database and updated consistently.
+    Challenge System: Users can create, view, update, and delete challenges. This feature could be used for competitions, learning exercises, or any form of user-generated content challenges.
     
-    Deleting Tasks: Users have the ability to delete tasks that are no longer relevant or necessary. By doing so, the API safely removes the corresponding task from the database.
+    Video Management: The API supports full CRUD functionality for video content, enabling users to upload, retrieve, update, and delete video entries.
     
-    In addition to these basic operations, the API is designed to efficiently handle multiple concurrent requests. This is achieved through concurrency techniques and goroutines in Go, ensuring optimal performance even under heavy workloads.
+    Pagination: All list operations support pagination, with a maximum of 10 results per page, ensuring efficient data retrieval and improved performance.
+    
+    Authentication Middleware: Secure routes are protected by authentication middleware, ensuring that only authorized users can access sensitive operations.
+    
+    External API Integration: The system is designed to interact with external AI APIs, potentially for content generation or enhancement of user-generated content.
+    
+    Scalability: With its containerized architecture (Docker support) and Kubernetes configurations, the platform is built to scale efficiently to handle increasing loads.
+    
+    Testing: Comprehensive unit tests for core services and repositories ensure reliability and ease of maintenance.
+    
+    Documentation: Swagger integration provides clear, interactive API documentation, making it easier for developers to understand and integrate with the platform.
+    
+    Flexible Data Models: The core domain models for users, challenges, and videos are designed to be adaptable to various use cases.
+    
+    This platform is ideal for applications requiring robust user management, content creation and sharing capabilities, and scalable backend infrastructure. Whether you're building a social media platform, an e-learning system, or a content management solution, CrudPlatform provides a solid foundation with its efficient Go implementation and modern architectural design.
     
     Links Utiles:
     - [The CrudPlatform repository](https://github.com/Juan21Sebas/CrudPlatform)
@@ -24,26 +39,26 @@ info:
   version: 1.0.0
 
 tags:
-  - name: adapterTaskManagement
+  - name: CrudPlatform
     description: All about task creation.
     externalDocs:
       description: Find out more
       url: http://swagger.io
 
 paths:
-  /task:
+  /users:
     post:
       tags:
-        - adapterTaskManagementResolver
-      summary: add new task
-      description: Allows users to create a new task by providing a title, description, and status (pending, in progress, completed).
-      operationId: addTask
+        - users
+      summary: add new user
+      description: Allows users to create a new user by providing a name, email, and image path.
+      operationId: addUser
       requestBody:
-        description: Create new Task
+        description: Create new User
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/addTask'
+              $ref: '#/components/schemas/addUser'
         required: true
       responses:
         '200':
@@ -51,40 +66,40 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/addTask200'          
+                $ref: '#/components/schemas/addUser200'          
         '405':
           description: Invalid input
           
-  /task/id:
+  /users/id:
     get:
       tags:
-        - adapterTaskManagementResolver
-      summary: select task
+        - users
+      summary: select user
       description: The API should allow users to get details about a specific task using its ID.
-      operationId: selectTask
+      operationId: selectUser
       responses:
         '200':
           description: Successful operation
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/selectTask200'          
+                $ref: '#/components/schemas/selectUser200'          
         '405':
           description: Invalid input  
   
-  /task/ids:
+  /users/ids:
     put:
       tags:
-        - adapterTaskManagementResolver
-      summary: update task
-      description: Users must be able to update the title, description, or status of an existing task.
-      operationId: putTask
+        - users
+      summary: update user
+      description: Users must be able to update the name, email, image_path.
+      operationId: putUser
       requestBody:
-        description: update new Task
+        description: update new User
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/updateTask'
+              $ref: '#/components/schemas/updateUser'
         required: true
       responses:
         '200':
@@ -92,43 +107,244 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/updateTask200'          
+                $ref: '#/components/schemas/updateUser200'          
         '405':
           description: Invalid input       
   
-  /task/:id:
+  /users/:id:
     delete:
       tags:
-        - adapterTaskManagementResolver
-      summary: delete task
+        - users
+      summary: delete User
       description: Users should be able to delete a task using their ID.
-      operationId: deleteTask
+      operationId: deleteUser
       responses:
         '200':
           description: Successful operation
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/deleteTask200'          
+                $ref: '#/components/schemas/deleteUser200'          
+        '405':
+          description: Invalid input 
+          
+  /challenge:
+    post:
+      tags:
+        - challenge
+      summary: add new challenge
+      description: Allows users to create a new user by providing a title, description, and difficulty.
+      operationId: addChallenge
+      requestBody:
+        description: Create new challenge
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/addChallenge'
+        required: true
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/addChallenge200'          
+        '405':
+          description: Invalid input
+          
+  /challenge/id:
+    get:
+      tags:
+        - challenge
+      summary: select challenge
+      description: The API should allow users to get details about a specific task using its ID.
+      operationId: selectChallenge
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/selectchallenge200'          
+        '405':
+          description: Invalid input  
+  
+  /challenge/ids:
+    put:
+      tags:
+        - challenge
+      summary: update challenge
+      description: Users must be able to update the title, description, difficulty.
+      operationId: putChallenge
+      requestBody:
+        description: update new challenge
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/updateChallenge'
+        required: true
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/updateChallenge200'          
+        '405':
+          description: Invalid input       
+  
+  /challenge/:id:
+    delete:
+      tags:
+        - challenge
+      summary: delete Challenge
+      description: Users should be able to delete a task using their ID.
+      operationId: deleteChallenge
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/deleteChallenge200'          
+        '405':
+          description: Invalid input 
+
+  /videos:
+    post:
+      tags:
+        - videos
+      summary: add new video
+      description: Allows users to create a new user by providing a title, description.
+      operationId: addVideo
+      requestBody:
+        description: Create new video
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/addVideo'
+        required: true
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/addVideo200'          
+        '405':
+          description: Invalid input
+          
+  /videos/id:
+    get:
+      tags:
+        - videos
+      summary: select video
+      description: The API should allow users to get details about a specific task using its ID.
+      operationId: selectVideo
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/selectVideo200'          
+        '405':
+          description: Invalid input  
+  
+  /videos/ids:
+    put:
+      tags:
+        - videos
+      summary: update video
+      description: Users must be able to update the title, description.
+      operationId: putVideo
+      requestBody:
+        description: update new video
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/updateVideo'
+        required: true
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/updateVideo200'          
+        '405':
+          description: Invalid input       
+  
+  /videos/:id:
+    delete:
+      tags:
+        - videos
+      summary: delete video
+      description: Users should be able to delete a task using their ID.
+      operationId: deleteVideo
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/deleteVideo200'          
         '405':
           description: Invalid input 
           
 components:
   schemas:
-    addTask:
+    addUser:
+      type: object
+      properties:
+        name:
+          type: string
+          example: Nombre del Usuario
+        email:
+          type: string
+          example: Email del Usuario
+        image_path:
+          type: string
+          example: Imagen del Usuario
+          
+    addChallenge:
       type: object
       properties:
         title:
           type: string
-          example: Título de la tarea
+          example: Nombre del Challenge
         description:
           type: string
-          example: Descripción de la tarea
-        status:
+          example: Email del Challenge
+        difficulty:
+          type: integer
+          example: 1
+          
+    addVideo:
+      type: object
+      properties:
+        title:
+          type: string
+          example: Nombre del Video
+        description:
+          type: string
+          example: Email del Video
+
+          
+    updateUser:
+      type: object
+      properties:
+        name:
+          type: string
+          example: Cambio
+        email:
+          type: string
+          example: Cambio
+        image_path:
           type: string
           example: Completada
     
-    updateTask:
+    updateChallenge:
       type: object
       properties:
         title:
@@ -137,11 +353,21 @@ components:
         description:
           type: string
           example: Cambio
-        status:
+        difficulty:
+          type: integer
+          example: 2
+    
+    updateVideo:
+      type: object
+      properties:
+        title:
           type: string
-          example: Completada
+          example: Cambio
+        description:
+          type: string
+          example: Cambio
           
-    addTask200:
+    addUser200:
       type: object
       properties:
         data:
@@ -161,23 +387,73 @@ components:
                   example: "Registro Creado"
               source:
                   type: string 
-                  example: Create Task
+                  example: Create User
                   
-    selectTask200:
+    addChallenge200:
+      type: object
+      properties:
+        data:
+            type: string  
+            example: Su ID es bea5e40a-0068-4eff-8b6e-caf31b1601e2
+        result:
+            type: object  
+            properties: 
+              intercode:
+                  type: string
+                  example: 200
+              message:
+                  type: string
+                  example: Ok
+              Detail:
+                  type: string
+                  example: "Registro Creado"
+              source:
+                  type: string 
+                  example: Create Challenge
+                  
+    addVideo200:
+      type: object
+      properties:
+        data:
+            type: string  
+            example: Su ID es bea5e40a-0068-4eff-8b6e-caf31b1601e2
+        result:
+            type: object  
+            properties: 
+              intercode:
+                  type: string
+                  example: 200
+              message:
+                  type: string
+                  example: Ok
+              Detail:
+                  type: string
+                  example: "Registro Creado"
+              source:
+                  type: string 
+                  example: Create Video              
+                  
+    selectUser200:
       type: object
       properties:
         data:
           type: object  
           properties: 
-            title:
+            name:
               type: string
-              example: Título de la tarea
-            description:
+              example: Nombre de Usuario
+            email:
               type: string
-              example: Descripción de la tarea
-            status:
+              example: Email del Usuario
+            image_path:
               type: string
-              example: Completada
+              example: Imagen del Usuario
+            created_at:
+              type: string
+              example: Fecha de Creacion
+            updated_at:
+              type: string
+              example: Fecha de Actualizacion 
         result:
             type: object  
             properties: 
@@ -192,9 +468,9 @@ components:
                   example: "Registro Seleccionado"
               source:
                   type: string 
-                  example: Select Task  
-                  
-    updateTask200:
+                  example: Select User  
+    
+    selectchallenge200:
       type: object
       properties:
         data:
@@ -202,13 +478,87 @@ components:
           properties: 
             title:
               type: string
-              example: Cambio
+              example: Titulo de Challenge
             description:
               type: string
+              example: Descripcion del Challenge
+            difficulty:
+              type: integer
+              example: 1
+            created_at:
+              type: string
+              example: Fecha de Creacion
+            updated_at:
+              type: string
+              example: Fecha de Actualizacion 
+        result:
+            type: object  
+            properties: 
+              intercode:
+                  type: string
+                  example: 200
+              message:
+                  type: string
+                  example: Ok
+              Detail:
+                  type: string
+                  example: "Registro Seleccionado"
+              source:
+                  type: string 
+                  example: Select Challenge 
+                  
+    selectVideo200:
+      type: object
+      properties:
+        data:
+          type: object  
+          properties: 
+            title:
+              type: string
+              example: Titulo de Video
+            description:
+              type: string
+              example: Descripcion del Video
+            created_at:
+              type: string
+              example: Fecha de Creacion
+            updated_at:
+              type: string
+              example: Fecha de Actualizacion 
+        result:
+            type: object  
+            properties: 
+              intercode:
+                  type: string
+                  example: 200
+              message:
+                  type: string
+                  example: Ok
+              Detail:
+                  type: string
+                  example: "Registro Seleccionado"
+              source:
+                  type: string 
+                  example: Select Video               
+                  
+    updateUser200:
+      type: object
+      properties:
+        data:
+          type: object  
+          properties: 
+            name:
+              type: string
               example: Cambio
-            status:
+            email:
+              type: string
+              example: Cambio
+            image_path:
               type: string
               example: Completada
+            updated_at:
+              type: string
+              example: 2024-09-06 04:11:01
         result:
             type: object  
             properties: 
@@ -223,9 +573,75 @@ components:
                   example: "Registro Actualizado"
               source:
                   type: string 
-                  example: Update Task  
+                  example: Update User  
     
-    deleteTask200:
+     
+    updateChallenge200:
+      type: object
+      properties:
+        data:
+          type: object  
+          properties: 
+            title:
+              type: string
+              example: Cambio
+            description:
+              type: string
+              example: Cambio
+            difficulty:
+              type: integer
+              example: 2
+            updated_at:
+              type: string
+              example: 2024-09-06 04:11:01
+        result:
+            type: object  
+            properties: 
+              intercode:
+                  type: string
+                  example: 200
+              message:
+                  type: string
+                  example: Ok
+              Detail:
+                  type: string
+                  example: "Registro Actualizado"
+              source:
+                  type: string 
+                  example: Update Challenge 
+                  
+    updateVideo200:
+      type: object
+      properties:
+        data:
+          type: object  
+          properties: 
+            title:
+              type: string
+              example: Cambio
+            description:
+              type: string
+              example: Cambio
+            updated_at:
+              type: string
+              example: 2024-09-06 04:11:01
+        result:
+            type: object  
+            properties: 
+              intercode:
+                  type: string
+                  example: 200
+              message:
+                  type: string
+                  example: Ok
+              Detail:
+                  type: string
+                  example: "Registro Actualizado"
+              source:
+                  type: string 
+                  example: Update Video               
+                  
+    deleteUser200:
       type: object
       properties:
         result:
@@ -242,5 +658,43 @@ components:
                   example: "Registro Eliminado"
               source:
                   type: string 
-                  example: Delete Task              
+                  example: Delete User  
+                  
+    deleteChallenge200:
+      type: object
+      properties:
+        result:
+            type: object  
+            properties: 
+              intercode:
+                  type: string
+                  example: 200
+              message:
+                  type: string
+                  example: Ok
+              Detail:
+                  type: string
+                  example: "Registro Eliminado"
+              source:
+                  type: string 
+                  example: Delete Challenge 
+    
+    deleteVideo200:
+      type: object
+      properties:
+        result:
+            type: object  
+            properties: 
+              intercode:
+                  type: string
+                  example: 200
+              message:
+                  type: string
+                  example: Ok
+              Detail:
+                  type: string
+                  example: "Registro Eliminado"
+              source:
+                  type: string 
+                  example: Delete Video 
     
